@@ -7,13 +7,13 @@ import torch.nn.init as init
 from util import attention_sum,attention_sum2
 from layer import mwGCN
 
-class KeHGN(nn.Module):
+class KeGCN(nn.Module):
     """
     The full model
     model with two layer mwGCN, reltion attention and embedding attention
     """
     def __init__(self, adj_list,device,input_dim=343,embed_dim=1024,att_activate=None,use_kg=False,kg_dim=None,share=False):
-        super(KeHGN, self).__init__()
+        super(KeGCN, self).__init__()
         self.rel_num=len(adj_list)
         self.embed_dim=embed_dim
         self.gcn1 = mwGCN(input_dim, embed_dim,device=device,rel_num=self.rel_num,att_activate=att_activate,use_att=False,share=share)

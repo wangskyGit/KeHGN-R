@@ -8,7 +8,7 @@ from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 #import matplotlib.pyplot as plt
 import random
-from model import KeHGN,KeGN
+from model import KeGCN,KeGN
 from loss import loss_cores
 from tm import transition_matrix_learn,bltm
 import math
@@ -50,7 +50,7 @@ class ExpModel:
         else:
             self.use_kg=False
             self.kg_dim=None
-        if self.model_name=='KeHGNN':
+        if self.model_name=='KeGCNR':
             self.tensor_adjacency_list=[]
             self.sum_adj=normalize_adj(sum(adj_list))
             indices = torch.from_numpy(np.asarray([self.sum_adj.row, self.sum_adj.col]).astype('int64')).long()
@@ -67,9 +67,9 @@ class ExpModel:
             else:
                 raise error('unsupport activation function, please try LeakyRelu or Tanh')
 
-            self.model = KeHGN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
+            self.model = KeGCN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
                             use_kg=self.use_kg,kg_dim=self.kg_dim,share=args.share).to(device)
-            self.pretrain_model = KeHGN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
+            self.pretrain_model = KeGCN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
                             use_kg=self.use_kg,kg_dim=self.kg_dim,share=args.share).to(device)
             # self.model = KeGN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
             #                 use_kg=self.use_kg,kg_dim=self.kg_dim,share=args.share).to(device)
@@ -112,12 +112,12 @@ class ExpModel:
                 att_activate=torch.nn.Tanh()
             else:
                 raise error('unsupport activation function, please try LeakyRelu or Tanh')
-            self.pretrain_model = KeHGN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
+            self.pretrain_model = KeGCN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
                             use_kg=self.use_kg,kg_dim=self.kg_dim,share=args.share).to(device)
             self.pos_weight=torch.tensor([1.0,args.pos_weight],requires_grad=False).to(device)
             train_loss,train_auc,val_auc,test_auc,best_e,best_val_auc=self.cores_train(tensor_train_mask,tensor_val_mask,tensor_test_mask,args)
             return train_loss,train_auc,val_auc,test_auc,best_e,best_val_auc
-        if self.model_name=='KeHGN':
+        if self.model_name=='KeGCN':
             self.tensor_adjacency_list=[]
             for adj in adj_list:
                 indices = torch.from_numpy(np.asarray([adj.row, adj.col]).astype('int64')).long()
@@ -130,7 +130,7 @@ class ExpModel:
             else:
                 raise error('unsupport activation function, please try LeakyRelu or Tanh')
 
-            self.model = KeHGN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
+            self.model = KeGCN(self.tensor_adjacency_list,input_dim=feature_sizes[0],device=self.device,embed_dim=args.hidden_dim,att_activate=att_activate,
                             use_kg=self.use_kg,kg_dim=self.kg_dim,share=args.share).to(device)
             self.pos_weight=torch.tensor([1.0,args.pos_weight],requires_grad=False).to(device)
             weight=[1.0,args.pos_weight]
@@ -209,8 +209,8 @@ class ExpModel:
                         print('meet max tolerance on validation set :epoch {}'.format(epoch))
                     break
             if epoch%100==0 and self.printFlag:
-                print("Epoch {:03d}: Loss {:.4f}, TrainAuc {:.4}, ValAuc {:.4f},weight:{}".format(
-                    epoch, loss.item(), train_acc.item(), val_acc.item(),weight))
+                print("Epoch {:03d}: Loss {:.4f}, TrainAuc {:.4}, ValAuc {:.4f}".format(
+                    epoch, loss.item(), train_acc.item(), val_acc.item()))
         best_e=np.argmax(val_auc_history)+1
         best_val_auc=max(val_auc_history)
         return loss_history,train_auc_history, val_auc_history,test_auc_history,best_e,best_val_auc
@@ -326,8 +326,8 @@ class ExpModel:
                         print('meet max tolerance on validation set :epoch {}'.format(epoch))
                     break
             if epoch%100==0 and self.printFlag:
-                print("Epoch {:03d}: Loss {:.4f}, TrainAuc {:.4}, ValAuc {:.4f},weight:{}".format(
-                    epoch, loss.item(), train_acc.item(), val_acc.item(),weight))
+                print("Epoch {:03d}: Loss {:.4f}, TrainAuc {:.4}, ValAuc {:.4f}".format(
+                    epoch, loss.item(), train_acc.item(), val_acc.item()))
         best_e=np.argmax(val_auc_history)+1
         best_val_auc=max(val_auc_history)
         return loss_history,train_auc_history, val_auc_history,test_auc_history,best_e,best_val_auc

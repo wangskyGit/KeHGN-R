@@ -19,7 +19,7 @@ def parse_args(args=None):
     parser.add_argument('--att_act',type=str,default='Tanh',help='activation of attention calculation, LeakyRelu or Tanh')
     parser.add_argument('--gcn', action='store_true')
     parser.add_argument('--dataset', type=str, default='main')
-    parser.add_argument('--model', default='KeHGNN', type=str)
+    parser.add_argument('--model', default='KeGCNR', type=str)
     parser.add_argument('-d', '--hidden_dim', default=1000, type=int)
     parser.add_argument('-r', '--regularization', default=0.0, type=float)
     parser.add_argument('-lr', '--learning_rate', default=0.0001, type=float)
@@ -63,7 +63,7 @@ if __name__=='__main__':
             posw_re_test=[]
             random.seed(seed)
             # if nr==0:
-            #     args.model='KeHGN'
+            #     args.model='KeGCN'
             ### train val test split (6:2:2) 
             pos_ratio=sum(labels).item()/(len(labels))
             pos_test=random.sample(list(high_conf_comp['index'].values[high_conf_comp['label']==1]),math.ceil(m*0.2*pos_ratio))
