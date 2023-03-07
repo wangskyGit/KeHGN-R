@@ -97,9 +97,9 @@ if __name__=='__main__':
                         exp=ExpModel(print_flag=True,early_stopping=True,args=args,seed=seed)
                         loss_history,train_auc_history,val_auc_history,test_auc_history,best_e,best_val_auc=exp.fit(mw_list,inits,corrupted_labels,train_mask,val_mask,test_mask,args=args)
                 # exp=GCNBaseline(print_flag=True,early_stopping=True,args=args,seed=seed)
-                    print('Best result on validation set: epoch:{},best val auc:{},test auc:{}'.format(best_e,best_val_auc,test_auc_history[best_e]))
+                    #print('Best result on validation set: epoch:{},best val auc:{},test auc:{}'.format(best_e,best_val_auc,test_auc_history[best_e]))
                     posw_re_val.append(best_val_auc)
                     posw_re_test.append(test_auc_history[best_e])
                     re.loc[run,:]=[posw,dr,best_val_auc,test_auc_history[best_e]]
-                    re.to_csv('{}_{}_random_1.5ns.csv'.format(args.model,args.dataset))
+                    re.to_csv('{}_{}_random.csv'.format(args.model,args.dataset))
                     run+=1
