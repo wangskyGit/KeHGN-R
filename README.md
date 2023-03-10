@@ -16,6 +16,8 @@ This repository can be run under:
 
 The datasets including adjacent matrix (*.npy) of all company subgraphs and csv files (fv.csv) with all features and labels. Pay attention that there is also a feature named 'year' in the fv.csv which is used to construct the trust-worthy test datasets and should not be used as the node attributes.
 
+**More details and describtion of the datasets will be pubnished when the paper gets acceptted.**
+
 ##### FKG knowledge embedding pretraining
 
 We use [DGL-KE](https://dglke.dgl.ai/doc/) for knowledge embedding learning, and the pretraining result can be found in [GoogleDrive-KE](https://drive.google.com/file/d/1pvCNNMzA8_NeJViXc-KvMZXItsHR91pO/view?usp=sharing), please download and unzip it to the current folder before running the code.
